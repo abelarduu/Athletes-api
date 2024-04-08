@@ -8,18 +8,17 @@ def home():
 
 #Create Athlete
 @app.post("/athletes/")
-async def create_athlete(athlete: Athlete) -> dict():
+async def create_athlete(athlete: Athlete) -> dict:
     athlete_values = tuple(athlete.dict().values())
     BD.query("INSERT INTO Athletes (name, cpf, age, weight, height, sex) VALUES (?, ?, ?, ?, ?, ?)", athlete_values)
     
     category_values= (BD.cur.lastrowid, athlete.name, athlete.weight)
     BD.query("INSERT INTO Categories (athlete_id, name, weight) VALUES (?, ?, ?)", category_values)
-    BD.con.commit()
     return {"Atleta": "Criado!"}
 
 #Get Athlete
 @app.get("/athletes/{athlete_id}")
-async def get_athlete(athlete_id: int):
+async def get_athlete(athlete_id: int) -> dict:
     BD.query("SELECT * FROM Athletes WHERE id = ? ", (athlete_id,))
     res_athlete= BD.cur.fetchone()
 
