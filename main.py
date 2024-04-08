@@ -1,5 +1,5 @@
-from workout_api import *
-from workout_api.models import *
+from athletes_api import *
+from athletes_api.models import *
 import uvicorn
 
 @app.get("/")
@@ -30,13 +30,20 @@ async def get_athlete(athlete_id: int) -> dict:
         return athlete_dict
 
     else:
-        return {"message": "Atleta não encontrado"}
+        return {"message": "Atleta não encontrado."}
+
+#update Athlete
+@app.put("/athletes/{athlete_id}")
+def update_athlete(athlete_id) -> dict:
+    athlete_values = tuple(athlete.dict().values())
+    BD.query("UPDATE Athletes SET name = ?, cpf = ?, age = ?, weight = ?, height = ?, sex = ? WHERE id = ?", athlete_values)
+    return {"mensagem": f"Atleta com ID {athlete_id} atualizado com sucesso!"}
 
 #delete Athlete
 @app.delete("/athletes/{athlete_id}")
-async def delete_athlete(athlete_id: int):
+async def delete_athlete(athlete_id: int) -> dict:
     BD.query("DELETE FROM Athletes WHERE id = ?", (athlete_id,))
-    return {"message": f"Atleta com ID {athlete_id} deletado com sucesso"}
+    return {"message": f"Atleta com ID {athlete_id} deletado com sucesso!"}
 
 '''
 def get_athletes():
