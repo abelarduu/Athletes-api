@@ -19,5 +19,5 @@ Este projeto é uma API desenvolvida em Python utilizando o framework FastAPI e 
 - Apresentação de boas práticas de desenvolvimento de APIs, incluindo a utilização de modelos de dados (usando Pydantic) e tratamento de erros.
 
 ### Resultado
-  <img src="img/interface.jpeg" type="image/jpeg" alt="interface" width=550>
+  <img src="img/interface.jpeg" type="image/jpeg" alt="interface">
 </div>
