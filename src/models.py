@@ -8,11 +8,6 @@ class Athlete(BaseModel):
         height: float
         sex: str
 
-class Training_Center(BaseModel):
-        name: str
-        address: str
-        owner: float
-
 class Category(BaseModel):
         name: str
         weight:float

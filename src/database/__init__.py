@@ -9,7 +9,9 @@ class dataBase:
         #Connecting with db
         self.con= sqlite3.connect(self.PATH / "database.bd")
         self.cur= self.con.cursor()
+        self.create_tables()
 
+    def create_tables(self):
         #Tables
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Athletes (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,12 +21,6 @@ class dataBase:
                             weight FLOAT,
                             height FLOAT,
                             sex VARCHAR(1))""")
-
-        self.cur.execute("""CREATE TABLE IF NOT EXISTS Training_Centers (
-                            id INT,
-                            name VARCHAR(40),
-                            address VARCHAR(60),
-                            owner VARCHAR(40))""")
 
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Categories (
                             athlete_id INTEGER,
@@ -36,7 +32,6 @@ class dataBase:
         try:
             self.cur.execute(query, data)
             self.con.commit()
-
         except Exception as err:
             self.con.rollback()
-            #return {"Error! O processo foi encerrado": err}
+            raise err

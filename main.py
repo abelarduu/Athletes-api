@@ -1,10 +1,20 @@
-from athletes_api import *
-from athletes_api.models import *
+from src import *
 import uvicorn
 
 @app.get("/")
 def home():
-    return {"Home": "Page"}
+    return {"Athletes Api": "Home Page"}
+
+@app.get("/athletes/")
+def get_athletes():
+    try:
+        BD.query("SELECT * FROM Athletes")
+        res = BD.cur.fetchall()
+        if not res: return {"message": "Não há atletas cadastrados."}
+        else: return res 
+    except Exception as e:
+        # Registrar a exceção ou retornar uma resposta de erro personalizada
+        return {"error": f"Erro ao buscar atletas: {e}"}
 
 #Create Athlete
 @app.post("/athletes/")
@@ -15,6 +25,16 @@ async def create_athlete(athlete: Athlete) -> dict:
     category_values= (BD.cur.lastrowid, athlete.name, athlete.weight)
     BD.query("INSERT INTO Categories (athlete_id, name, weight) VALUES (?, ?, ?)", category_values)
     return {"Atleta": "Criado!"}
+    
+@app.put("/athletes/{athlete_id}")
+def update_athlete(athlete_id, athlete: Athlete) -> dict:
+    try:
+        athlete_values = tuple(athlete.dict().values()) + (athlete_id,)
+        BD.query("UPDATE Athletes SET name = ?, cpf = ?, age = ?, weight = ?, height = ?, sex = ? WHERE id = ?", athlete_values)
+        return {"mensagem": f"Atleta com ID {athlete_id} atualizado com sucesso!"}
+    except Exception as e:
+        return {"error": f"Erro ao atualizar o atleta: {e}"}
+
 
 #Get Athlete
 @app.get("/athletes/{athlete_id}")
@@ -32,24 +52,12 @@ async def get_athlete(athlete_id: int) -> dict:
     else:
         return {"message": "Atleta não encontrado."}
 
-#update Athlete
-@app.put("/athletes/{athlete_id}")
-def update_athlete(athlete_id) -> dict:
-    athlete_values = tuple(athlete.dict().values())
-    BD.query("UPDATE Athletes SET name = ?, cpf = ?, age = ?, weight = ?, height = ?, sex = ? WHERE id = ?", athlete_values)
-    return {"mensagem": f"Atleta com ID {athlete_id} atualizado com sucesso!"}
-
 #delete Athlete
 @app.delete("/athletes/{athlete_id}")
 async def delete_athlete(athlete_id: int) -> dict:
     BD.query("DELETE FROM Athletes WHERE id = ?", (athlete_id,))
+    BD.query("DELETE FROM Categories WHERE athlete_id  = ?", (athlete_id,))
     return {"message": f"Atleta com ID {athlete_id} deletado com sucesso!"}
-
-'''
-def get_athletes():
-    BD.query("SELECT * FROM  Athletes")
-    res= BD.cur.fetchall()
-    return res'''
 
 if __name__ == "__main__":
     uvicorn.run('main:app', host= '0.0.0.0', port=8000, log_level='info', reload=True)
