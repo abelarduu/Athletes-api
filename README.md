@@ -1,6 +1,8 @@
 <div>
 
 ## Athetles_Api
+  <img src="img/interface.jpeg" type="image/jpeg" alt="interface">
+  
 ### Sobre o projeto
 
 Este projeto é uma API desenvolvida em Python utilizando o framework FastAPI e o banco de dados SQLite3. A API permite realizar uma variedade de operações CRUD (Create, Read, Update, Delete) para gerenciar informações detalhadas sobre atletas. Com essa API, os usuários têm a capacidade de criar, visualizar, atualizar e excluir registros de atletas de forma eficiente e intuitiva.
@@ -18,6 +20,4 @@ Este projeto é uma API desenvolvida em Python utilizando o framework FastAPI e 
 - Integração de um banco de dados SQLite3 em uma aplicação Python utilizando o módulo `sqlite3`.
 - Apresentação de boas práticas de desenvolvimento de APIs, incluindo a utilização de modelos de dados (usando Pydantic) e tratamento de erros.
 
-### Resultado
-  <img src="img/interface.jpeg" type="image/jpeg" alt="interface">
 </div>
