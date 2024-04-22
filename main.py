@@ -1,12 +1,14 @@
 from src import *
 import uvicorn
 
+#Home Page
 @app.get("/")
 def home():
     return {"Athletes Api": "Home Page"}
 
+#Get Athletes
 @app.get("/athletes/")
-def get_athletes():
+async def get_athletes():
     try:
         BD.query("SELECT * FROM Athletes")
         res = BD.cur.fetchall()
@@ -15,6 +17,14 @@ def get_athletes():
     except Exception as e:
         # Registrar a exceção ou retornar uma resposta de erro personalizada
         return {"error": f"Erro ao buscar atletas: {e}"}
+
+#Get Athlete
+@app.get("/athletes/{athlete_id}")
+async def get_athlete(athlete_id: int):
+    BD.query("SELECT * FROM Athletes WHERE id = ? ", (athlete_id,))
+    res = BD.cur.fetchone()
+    if not res: return {"message": "Atleta não encontrado."}
+    else: return res
 
 #Create Athlete
 @app.post("/athletes/")
@@ -25,9 +35,10 @@ async def create_athlete(athlete: Athlete) -> dict:
     category_values= (BD.cur.lastrowid, athlete.name, athlete.weight)
     BD.query("INSERT INTO Categories (athlete_id, name, weight) VALUES (?, ?, ?)", category_values)
     return {"Atleta": "Criado!"}
-    
+
+#Update Athlete
 @app.put("/athletes/{athlete_id}")
-def update_athlete(athlete_id, athlete: Athlete) -> dict:
+async def update_athlete(athlete_id, athlete: Athlete) -> dict:
     try:
         athlete_values = tuple(athlete.dict().values()) + (athlete_id,)
         BD.query("UPDATE Athletes SET name = ?, cpf = ?, age = ?, weight = ?, height = ?, sex = ? WHERE id = ?", athlete_values)
@@ -35,24 +46,7 @@ def update_athlete(athlete_id, athlete: Athlete) -> dict:
     except Exception as e:
         return {"error": f"Erro ao atualizar o atleta: {e}"}
 
-
-#Get Athlete
-@app.get("/athletes/{athlete_id}")
-async def get_athlete(athlete_id: int) -> dict:
-    BD.query("SELECT * FROM Athletes WHERE id = ? ", (athlete_id,))
-    res_athlete= BD.cur.fetchone()
-
-    if res_athlete:
-        # Obtendo os nomes das colunas
-        # Criando um dicionário combinando os nomes das colunas com os valores da linha
-        columns = [desc[0] for desc in BD.cur.description]
-        athlete_dict = dict(zip(columns, res_athlete))
-        return athlete_dict
-
-    else:
-        return {"message": "Atleta não encontrado."}
-
-#delete Athlete
+#Delete Athlete
 @app.delete("/athletes/{athlete_id}")
 async def delete_athlete(athlete_id: int) -> dict:
     BD.query("DELETE FROM Athletes WHERE id = ?", (athlete_id,))
