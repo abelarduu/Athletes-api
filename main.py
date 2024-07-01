@@ -1,5 +1,4 @@
 from src import *
-import uvicorn
 
 #Home Page
 @app.get("/")
