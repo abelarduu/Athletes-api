@@ -3,5 +3,7 @@ from src.database import dataBase
 from src.models import Athlete, Category
 import uvicorn
 
-app = FastAPI(title= "Athetles_Api")
-BD= dataBase()
+# Inicializa a aplicação FastAPI
+# Instancia o banco de dados.
+app = FastAPI(title="Athetles_Api")
+BD = dataBase()  
